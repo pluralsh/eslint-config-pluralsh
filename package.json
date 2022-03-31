@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-pluralsh",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A modern eslint configuration",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "url": "https://github.com/pluralsh/eslint-config-pluralsh/issues"
   },
   "homepage": "https://github.com/pluralsh/eslint-config-pluralsh#readme",
-  "devDependencies": {
+  "dependencies": {
     "eslint": "^8.12.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.4",
