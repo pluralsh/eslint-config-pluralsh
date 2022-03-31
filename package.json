@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-pluralsh",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A modern eslint configuration",
   "main": "index.js",
   "scripts": {
