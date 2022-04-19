@@ -39,7 +39,7 @@ module.exports = {
     'no-loop-func': 'off',
     'no-mixed-operators': 'off',
     'no-multi-assign': 'off',
-    'no-multiple-empty-lines': ['error', { max: 1 }],
+    'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 1 }],
     'no-nested-ternary': 'off',
     'no-param-reassign': 'off',
     'no-plusplus': 'off',
