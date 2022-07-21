@@ -22,7 +22,7 @@
     "lint": "eslint .",
     "fix": "eslint . --fix"
   },
-  "packageManager": "yarn@3.2.1",
+  "packageManager": "yarn@3.2.2",
   "peerDependencies": {
     "eslint": ">= 8.19.0",
     "eslint-plugin-import": ">= 2.26.0",
