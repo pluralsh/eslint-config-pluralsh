@@ -1,6 +1,4 @@
 module.exports = {
-  root: true,
-
   settings: {
     // Allow importing more file types
     'import/resolver': {
@@ -8,7 +6,7 @@ module.exports = {
         extensions: [
           '.js',
           '.jsx',
-          '.json',
+          '.json'
         ],
       },
     },
