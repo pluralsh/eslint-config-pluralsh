@@ -76,7 +76,8 @@ module.exports = {
       { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] }
     ],
     radix: 'off',
-    'semi-style': 'error',
+    semi: ['error', 'never'],
+    'semi-style': ['error', 'first'],
     'space-infix-ops': 'error',
     'sort-imports': [
       'error',
