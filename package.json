@@ -13,7 +13,9 @@
     "url": "git+https://github.com/pluralsh/eslint-config-pluralsh.git"
   },
   "keywords": [
-    "eslint"
+    "eslint",
+    "plural",
+    "pluralsh"
   ],
   "main": "index.js",
   "scripts": {
