@@ -6,7 +6,7 @@ module.exports = {
         extensions: [
           '.js',
           '.jsx',
-          '.json'
+          '.json',
         ],
       },
     },
@@ -17,7 +17,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    es2020: true
+    es2020: true,
   },
 
   rules: {
@@ -30,7 +30,16 @@ module.exports = {
     'brace-style': ['error', 'stroustrup'],
     'class-methods-use-this': 'off',
     'consistent-return': 'off',
-    'comma-dangle': ['error', 'only-multiline'],
+    'comma-dangle': [
+      'error',
+      {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'always-multiline',
+        exports: 'always-multiline',
+        functions: 'ignore',
+      },
+    ],
     'default-case': 'off',
     'function-paren-newline': ['error', { minItems: 4 }],
     // Deprecated. Make sure it is needed.
@@ -73,7 +82,7 @@ module.exports = {
       { blankLine: 'any', prev: 'import', next: 'import' },
       // Require a blank line after a sequence of variable declarations
       { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
-      { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] }
+      { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
     ],
     radix: 'off',
     semi: ['error', 'never'],
@@ -119,7 +128,7 @@ module.exports = {
       'error',
       {
         maximum: 1,
-        when: 'always'
+        when: 'always',
       },
     ],
     'react/jsx-one-expression-per-line': 'off',
@@ -137,4 +146,4 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     'react/no-unstable-nested-components': 'off',
   },
-};
+}
