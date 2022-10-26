@@ -14,6 +14,8 @@ module.exports = {
 
   extends: ['airbnb', 'airbnb/hooks'],
 
+  plugins: ['import-newlines'],
+
   env: {
     browser: true,
     node: true,
@@ -145,5 +147,10 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'react/no-unstable-nested-components': 'off',
+
+    'import-newlines/enforce': [
+      'error',
+      3,
+    ],
   },
 }
