@@ -22,7 +22,7 @@
     "lint": "eslint .",
     "fix": "eslint . --fix"
   },
-  "packageManager": "yarn@3.2.2",
+  "packageManager": "yarn@3.2.4",
   "dependencies": {
     "eslint": "8.26.0",
     "eslint-config-airbnb": "19.0.4",
