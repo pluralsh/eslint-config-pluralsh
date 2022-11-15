@@ -23,10 +23,13 @@ jobs:
       with:
         fetch-depth: 0
         token: ${{ secrets.PLURAL_BOT_PAT }}
+    - name: Read Node.js version from package.json
+      run: echo ::set-output name=nodeVersion::$(node -p "require('./package.json').engines.node")
+      id: engines
     - name: 'Setup Node'
       uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: ${{ steps.engines.outputs.nodeVersion }}
         registry-url: 'https://registry.npmjs.org'
     - name: 'Install Dependencies'
       run: yarn install --immutable

@@ -22,6 +22,9 @@
     "lint": "eslint .",
     "fix": "eslint . --fix"
   },
+  "engines": {
+    "node": "16.15.0"
+  },
   "packageManager": "yarn@3.2.4",
   "dependencies": {
     "eslint": "8.27.0",
