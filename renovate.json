@@ -16,6 +16,12 @@
         "major"
       ],
       "enabled": true
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "platformAutomerge": true
     }
   ],
   "labels": [
