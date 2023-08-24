@@ -25,7 +25,7 @@
   "engines": {
     "node": "18.17.1"
   },
-  "packageManager": "yarn@3.6.2",
+  "packageManager": "yarn@3.6.3",
   "dependencies": {
     "eslint": "8.47.0",
     "eslint-config-airbnb": "19.0.4",
