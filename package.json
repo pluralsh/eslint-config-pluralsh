@@ -27,7 +27,7 @@
   },
   "packageManager": "yarn@4.0.2",
   "dependencies": {
-    "eslint": "8.54.0",
+    "eslint": "8.55.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-import-newlines": "^1.2.3",
