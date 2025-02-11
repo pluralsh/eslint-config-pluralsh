@@ -23,7 +23,7 @@
     "fix": "eslint . --fix"
   },
   "engines": {
-    "node": "18.19.1"
+    "node": "22.14.0"
   },
   "packageManager": "yarn@4.0.2",
   "dependencies": {
