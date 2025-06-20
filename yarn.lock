@@ -110,7 +110,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pluralsh/eslint-config-pluralsh@workspace:."
   dependencies:
-    conventional-changelog-conventionalcommits: "npm:6.1.0"
+    conventional-changelog-conventionalcommits: "npm:9.0.0"
     eslint: "npm:8.57.1"
     eslint-config-airbnb: "npm:19.0.4"
     eslint-plugin-import: "npm:2.32.0"
@@ -628,12 +628,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-conventionalcommits@npm:6.1.0":
-  version: 6.1.0
-  resolution: "conventional-changelog-conventionalcommits@npm:6.1.0"
+"conventional-changelog-conventionalcommits@npm:9.0.0":
+  version: 9.0.0
+  resolution: "conventional-changelog-conventionalcommits@npm:9.0.0"
   dependencies:
     compare-func: "npm:^2.0.0"
-  checksum: 8/4383a35cdf72f5964e194a1146e7f78276e301f73bd993b71627bb93586b6470d411b9613507ceb37e0fed0b023199c95e941541fa47172b4e6a7916fc3a53ff
+  checksum: 96352c228cb14f0a5bc8628b2285361d72c39906070abe9c38e0d76d741c9f2653b20520ebed51d9a8d41d597c67d79220d4afba9f27e6cef4dc381c7fd4f9c3
   languageName: node
   linkType: hard
 
