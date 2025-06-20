@@ -36,6 +36,6 @@
     "eslint-plugin-react-hooks": "4.6.0"
   },
   "devDependencies": {
-    "conventional-changelog-conventionalcommits": "6.1.0"
+    "conventional-changelog-conventionalcommits": "9.0.0"
   }
 }
