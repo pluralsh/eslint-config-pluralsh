@@ -33,6 +33,9 @@ jobs:
       issues: write
       pull-requests: write
 
+    env:
+      DRY_RUN: ${{ github.event_name == 'pull_request' || inputs.dry_run == true }}
+
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v7
@@ -45,10 +48,37 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: 'Install Dependencies'
         run: yarn install --immutable
+      - name: Verify release credentials
+        if: env.DRY_RUN == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.PLURAL_BOT_PAT }}
+          NODE_AUTH_TOKEN: ${{ secrets.PLURAL_BOT_NPM_TOKEN }}
+        run: |
+          if [ -z "$GITHUB_TOKEN" ]; then
+            echo 'PLURAL_BOT_PAT is missing'
+            exit 1
+          fi
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo 'PLURAL_BOT_NPM_TOKEN is missing'
+            exit 1
+          fi
+
+          # Confirms the GitHub PAT is valid.
+          gh api user --jq '"GitHub auth OK as @\(.login)"'
+
+          # Confirms the npm token can authenticate to the registry.
+          npm whoami
+      - name: Verify npm package
+        if: env.DRY_RUN == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PLURAL_BOT_NPM_TOKEN }}
+        run: |
+          npm pack --dry-run
+          npm publish --dry-run
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v6
         with:
-          dry_run: ${{ github.event_name == 'pull_request' || inputs.dry_run == true }}
+          dry_run: ${{ env.DRY_RUN == 'true' }}
           # Analyze the PR/dispatch branch; real publishes still only happen on main.
           branches: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
           unset_gha_env: ${{ github.event_name == 'pull_request' }}
