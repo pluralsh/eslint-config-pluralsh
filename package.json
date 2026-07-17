@@ -32,6 +32,7 @@
   "engines": {
     "node": ">=20.9.0"
   },
+
   "packageManager": "yarn@4.17.1",
   "dependencies": {
     "eslint-config-prettier": "10.1.8",
