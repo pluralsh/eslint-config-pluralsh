@@ -51,19 +51,15 @@ jobs:
       - name: Verify release credentials
         if: env.DRY_RUN == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.PLURAL_BOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.PLURAL_BOT_PAT || github.token }}
           NODE_AUTH_TOKEN: ${{ secrets.PLURAL_BOT_NPM_TOKEN }}
         run: |
-          if [ -z "$GITHUB_TOKEN" ]; then
-            echo 'PLURAL_BOT_PAT is missing'
-            exit 1
-          fi
           if [ -z "$NODE_AUTH_TOKEN" ]; then
             echo 'PLURAL_BOT_NPM_TOKEN is missing'
             exit 1
           fi
 
-          # Confirms the GitHub PAT is valid.
+          # Prefer PLURAL_BOT_PAT; fall back to the workflow github.token.
           gh api user --jq '"GitHub auth OK as @\(.login)"'
 
           # Confirms the npm token can authenticate to the registry.
@@ -83,5 +79,5 @@ jobs:
           branches: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
           unset_gha_env: ${{ github.event_name == 'pull_request' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.PLURAL_BOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.PLURAL_BOT_PAT || github.token }}
           NODE_AUTH_TOKEN: ${{ secrets.PLURAL_BOT_NPM_TOKEN }}
