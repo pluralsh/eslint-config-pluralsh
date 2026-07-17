@@ -64,7 +64,11 @@ jobs:
           gh api "repos/${GITHUB_REPOSITORY}" --jq '"GitHub auth OK for \(.full_name)"'
 
           # Confirms the npm token can authenticate to the registry.
-          npm whoami
+          # There is no github.token equivalent for npm — rotate PLURAL_BOT_NPM_TOKEN if this fails.
+          if ! npm whoami; then
+            echo 'PLURAL_BOT_NPM_TOKEN is present but unauthorized. Create a new npm automation/granular token and update the repo secret.'
+            exit 1
+          fi
       - name: Verify npm package
         if: env.DRY_RUN == 'true'
         env:
