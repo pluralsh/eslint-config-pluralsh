@@ -32,6 +32,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      id-token: write # npm trusted publishing (OIDC)
 
     env:
       DRY_RUN: ${{ github.event_name == 'pull_request' || inputs.dry_run == true }}
@@ -44,38 +45,27 @@ jobs:
       - name: 'Setup Node'
         uses: actions/setup-node@v7
         with:
+          # Node 24 ships npm with OIDC trusted-publishing support.
+          # Do not set registry-url here — it writes an .npmrc auth token line that breaks OIDC.
           node-version: 24
-          registry-url: 'https://registry.npmjs.org'
       - name: 'Install Dependencies'
         run: yarn install --immutable
       - name: Verify release credentials
         if: env.DRY_RUN == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.PLURAL_BOT_PAT || github.token }}
-          NODE_AUTH_TOKEN: ${{ secrets.PLURAL_BOT_NPM_TOKEN }}
         run: |
-          if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo 'PLURAL_BOT_NPM_TOKEN is missing'
-            exit 1
-          fi
-
           # Prefer PLURAL_BOT_PAT; fall back to the workflow github.token.
           # github.token cannot call /user, so verify against this repository instead.
           gh api "repos/${GITHUB_REPOSITORY}" --jq '"GitHub auth OK for \(.full_name)"'
 
-          # Confirms the npm token can authenticate to the registry.
-          # There is no github.token equivalent for npm — rotate PLURAL_BOT_NPM_TOKEN if this fails.
-          if ! npm whoami; then
-            echo 'PLURAL_BOT_NPM_TOKEN is present but unauthorized. Create a new npm automation/granular token and update the repo secret.'
+          if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]; then
+            echo 'OIDC is unavailable (missing id-token permission).'
             exit 1
           fi
-      - name: Verify npm package
-        if: env.DRY_RUN == 'true'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.PLURAL_BOT_NPM_TOKEN }}
-        run: |
+          echo 'npm OIDC token exchange is available'
+
           npm pack --dry-run
-          npm publish --dry-run
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v6
         with:
@@ -85,4 +75,4 @@ jobs:
           unset_gha_env: ${{ github.event_name == 'pull_request' }}
         env:
           GITHUB_TOKEN: ${{ secrets.PLURAL_BOT_PAT || github.token }}
-          NODE_AUTH_TOKEN: ${{ secrets.PLURAL_BOT_NPM_TOKEN }}
+          # Intentionally no NODE_AUTH_TOKEN / NPM_TOKEN — npm auth uses OIDC trusted publishing.
