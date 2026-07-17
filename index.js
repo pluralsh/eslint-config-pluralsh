@@ -1,156 +1,102 @@
-module.exports = {
-  settings: {
-    // Allow importing more file types
-    'import/resolver': {
-      node: {
-        extensions: [
-          '.js',
-          '.jsx',
-          '.json',
-        ],
+import importPlugin from 'eslint-plugin-import'
+import prettier from 'eslint-plugin-prettier/recommended'
+import react from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
+
+export const createConfig = ({
+  files = ['src/**/*.{js,jsx,ts,tsx}'],
+  ignores = [],
+  tsconfigRootDir = process.cwd(),
+} = {}) => [
+  { ignores },
+  ...tseslint.configs.recommendedTypeChecked,
+  react.configs.flat.recommended,
+  react.configs.flat['jsx-runtime'],
+  reactHooksPlugin.configs.flat['recommended-latest'],
+  importPlugin.flatConfigs.recommended,
+  prettier,
+  {
+    files,
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir,
+        ecmaFeatures: { jsx: true },
+      },
+      globals: {
+        ...globals.browser,
+        JSX: 'readonly',
       },
     },
+    plugins: { react },
+    settings: { react: { version: 'detect' } },
+    rules: {
+      // TypeScript
+      '@typescript-eslint/unbound-method': 'off',
+      '@typescript-eslint/no-redundant-type-constituents': 'off',
+      '@typescript-eslint/require-await': 'off',
+      '@typescript-eslint/no-duplicate-type-constituents': 'off',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/no-base-to-string': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/consistent-type-exports': 'error',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/prefer-promise-reject-errors': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+
+      // React
+      'react/jsx-no-bind': 'off',
+      'react/no-unknown-property': ['error', { ignore: ['css'] }],
+      'react/require-default-props': 'off',
+      'react/destructuring-assignment': 'off',
+      'react/prop-types': 'off',
+      'react/display-name': 'off',
+      'react/jsx-key': 'off',
+      'react/no-unescaped-entities': 'off',
+
+      // React Compiler rules are warnings until both applications are compliant.
+      'react-hooks/preserve-manual-memoization': 'warn',
+      'react-hooks/immutability': 'warn',
+      'react-hooks/refs': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/set-state-in-render': 'warn',
+      'react-hooks/purity': 'warn',
+
+      // Prettier
+      'prettier/prettier': 'error',
+
+      // Import
+      'import/no-unresolved': 'off',
+      'import/extensions': 'off',
+      'import/no-extraneous-dependencies': 'off',
+      'import/no-named-as-default': 'off',
+      'import/named': 'off',
+      'import/no-duplicates': 'off',
+
+      'no-unused-vars': 'off',
+    },
   },
+]
 
-  extends: ['airbnb', 'airbnb/hooks'],
-
-  plugins: ['import-newlines'],
-
-  env: {
-    browser: true,
-    node: true,
-    es2020: true,
-  },
-
-  rules: {
-    /**
-     * Core eslint rules
-     * Ref: https://eslint.org/docs/latest/rules/
-     * TODO: Enable 'off' rules
-     * */
-    'arrow-parens': ['error', 'as-needed'],
-    'brace-style': ['error', 'stroustrup'],
-    'class-methods-use-this': 'off',
-    'consistent-return': 'off',
-    'comma-dangle': [
-      'error',
-      {
-        arrays: 'always-multiline',
-        objects: 'always-multiline',
-        imports: 'always-multiline',
-        exports: 'always-multiline',
-        functions: 'ignore',
-      },
-    ],
-    'default-case': 'off',
-    'function-paren-newline': ['error', { minItems: 4 }],
-    // Deprecated. Make sure it is needed.
-    'global-require': 'off',
-    'implicit-arrow-linebreak': ['error', 'beside'],
-    indent: ['error', 2, { ignoreComments: true }],
-    'max-len': 'off',
-    'no-alert': 'off',
-    'no-await-in-loop': 'off',
-    'no-bitwise': 'off',
-    'no-confusing-arrow': 'error',
-    'no-console': 'off',
-    // Deprecated. Make sure it is needed.
-    'no-constant-condition': 'off',
-    'no-continue': 'off',
-    'no-loop-func': 'off',
-    'no-mixed-operators': 'off',
-    'no-multi-assign': 'off',
-    'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 1 }],
-    'no-nested-ternary': 'off',
-    'no-param-reassign': 'off',
-    'no-plusplus': 'off',
-    'no-restricted-syntax': 'off',
-    'no-return-assign': 'off',
-    'no-self-compare': 'off',
-    'no-shadow': 'off',
-    'no-trailing-spaces': 'error',
-    'no-underscore-dangle': 'off',
-    'no-unreachable': 'warn',
-    'no-unused-vars': 'warn',
-    'no-use-before-define': 'off',
-    'operator-linebreak': ['error', 'before'],
-    'padded-blocks': ['error', 'never', { allowSingleLineBlocks: true }],
-    'padding-line-between-statements': [
-      'error',
-      // Require a blank line before return statement
-      { blankLine: 'always', prev: '*', next: 'return' },
-      // Require a blank line after a sequence of imports
-      { blankLine: 'always', prev: 'import', next: '*' },
-      { blankLine: 'any', prev: 'import', next: 'import' },
-      // Require a blank line after a sequence of variable declarations
-      { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
-      { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
-    ],
-    radix: 'off',
-    semi: ['error', 'never'],
-    'semi-style': ['error', 'first'],
-    'space-infix-ops': 'error',
-    'sort-imports': [
-      'error',
-      {
-        ignoreDeclarationSort: true,
-        allowSeparatedGroups: true,
-      },
-    ],
-
-    /**
-     * Import specific eslint rules
-     * Ref: https://github.com/import-js/eslint-plugin-import
-     * TODO: Enable 'off' rules
-     * */
-    'import/no-cycle': 'off',
-    'import/no-dynamic-require': 'off',
-    'import/order': ['error', { 'newlines-between': 'always-and-inside-groups' }],
-    'import/prefer-default-export': 'off',
-
-    /**
-     * Static AST checker for accessibility rules.
-     * Ref: https://github.com/jsx-eslint/eslint-plugin-jsx-a11y
-     * TODO: Enable 'off' rules
-     * */
-    'jsx-a11y/alt-text': 'off',
-    'jsx-a11y/anchor-is-valid': 'off',
-    'jsx-a11y/click-events-have-key-events': 'off',
-    'jsx-a11y/media-has-caption': 'off',
-    'jsx-a11y/no-noninteractive-element-interactions': 'off',
-    'jsx-a11y/no-static-element-interactions': 'off',
-
-    /**
-     * React specific eslint rules
-     * Ref: https://github.com/jsx-eslint/eslint-plugin-react
-     * TODO: Enable 'off' rules
-     * */
-    'react/jsx-filename-extension': 'off',
-    'react/jsx-max-props-per-line': [
-      'error',
-      {
-        maximum: 1,
-        when: 'always',
-      },
-    ],
-    'react/jsx-one-expression-per-line': 'off',
-    'react/jsx-props-no-spreading': 'off',
-    'react/jsx-uses-react': 'off',
-    'react/jsx-no-bind': 'off',
-    'react/no-array-index-key': 'off',
-    'react/no-danger': 'off',
-    'react/no-unescaped-entities': 'off',
-    'react/prefer-stateless-function': 'off',
-    'react/prop-types': 'off',
-    'react/react-in-jsx-scope': 'off',
-    'react/sort-comp': 'off',
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
-    'react/no-unstable-nested-components': 'off',
-
-    'import-newlines/enforce': [
-      'error',
-      3,
-    ],
-  },
-}
+export default createConfig
