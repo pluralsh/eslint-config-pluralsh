@@ -10,19 +10,7 @@ on:
       - '.releaserc'
     branches:
       - 'main'
-  pull_request:
-    paths:
-      - '*.js'
-      - 'package.json'
-      - 'yarn.lock'
-      - '.github/workflows/publish.yml'
-      - '.releaserc'
   workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Run semantic-release without publishing'
-        type: boolean
-        default: true
 
 jobs:
   publish:
@@ -34,9 +22,6 @@ jobs:
       pull-requests: write
       id-token: write # npm trusted publishing (OIDC)
 
-    env:
-      DRY_RUN: ${{ github.event_name == 'pull_request' || inputs.dry_run == true }}
-
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v7
@@ -45,34 +30,10 @@ jobs:
       - name: 'Setup Node'
         uses: actions/setup-node@v7
         with:
-          # Node 24 ships npm with OIDC trusted-publishing support.
-          # Do not set registry-url here — it writes an .npmrc auth token line that breaks OIDC.
           node-version: 24
       - name: 'Install Dependencies'
         run: yarn install --immutable
-      - name: Verify release credentials
-        if: env.DRY_RUN == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.PLURAL_BOT_PAT || github.token }}
-        run: |
-          # Prefer PLURAL_BOT_PAT; fall back to the workflow github.token.
-          # github.token cannot call /user, so verify against this repository instead.
-          gh api "repos/${GITHUB_REPOSITORY}" --jq '"GitHub auth OK for \(.full_name)"'
-
-          if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]; then
-            echo 'OIDC is unavailable (missing id-token permission).'
-            exit 1
-          fi
-          echo 'npm OIDC token exchange is available'
-
-          npm pack --dry-run
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v6
-        with:
-          dry_run: ${{ env.DRY_RUN == 'true' }}
-          # Analyze the PR/dispatch branch; real publishes still only happen on main.
-          branches: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
-          unset_gha_env: ${{ github.event_name == 'pull_request' }}
         env:
           GITHUB_TOKEN: ${{ secrets.PLURAL_BOT_PAT || github.token }}
-          # Intentionally no NODE_AUTH_TOKEN / NPM_TOKEN — npm auth uses OIDC trusted publishing.
