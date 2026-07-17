@@ -60,7 +60,8 @@ jobs:
           fi
 
           # Prefer PLURAL_BOT_PAT; fall back to the workflow github.token.
-          gh api user --jq '"GitHub auth OK as @\(.login)"'
+          # github.token cannot call /user, so verify against this repository instead.
+          gh api "repos/${GITHUB_REPOSITORY}" --jq '"GitHub auth OK for \(.full_name)"'
 
           # Confirms the npm token can authenticate to the registry.
           npm whoami
